@@ -8,6 +8,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      CHART_NAME: url-generator
     
     steps:
     - name: Checkout code
@@ -18,23 +20,20 @@ jobs:
       with:
         helm-version: '3.8.0'
 
-    - name: Set chart name
-      run: echo "CHART_NAME=$(basename ${{ github.repository }})" >> $GITHUB_ENV
-
     - name: Build Helm Chart
       run: |
-        helm package ./charts/{{ env.CHART_NAME }}
+        helm package ./charts/${{ env.CHART_NAME }}
         helm repo index ./charts --url https://ghcr.io/${{ github.repository_owner }}/$(basename ${{ github.repository }})
-    
+
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v2
       with:
         registry: ghcr.io
         username: ${{ github.actor }}
-        password: ${{ secrets.TOKEN_GITHUB }}
+        password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Publish Helm Chart
       run: |
-        helm push ./charts/{{ env.CHART_NAME }}-0.1.0.tgz oci://ghcr.io/${{ github.repository_owner }}/$(basename ${{ github.repository }})
+        helm push ./charts/${{ env.CHART_NAME }}-0.1.0.tgz oci://ghcr.io/${{ github.repository_owner }}/$(basename ${{ github.repository }})
       env:
         HELM_EXPERIMENTAL_OCI: 1
