@@ -1,0 +1,10 @@
+apiVersion: v1
+entries:
+  url-generator:
+    - name: url-generator
+      version: 0.1.0
+      apiVersion: v2
+      description: A Helm chart for Kubernetes
+      urls:
+        - https://github.com/nandan/url-generator/url-generator-0.1.0.tgz
+      created: "2022-11-21T10:10:00Z"
